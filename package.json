@@ -1,0 +1,11 @@
+{
+  "dependencies": {
+    "@radix-ui/react-toast": "^1.2.6",
+    "@react-email/components": "^0.0.33",
+    "@supabase/supabase-js": "^2.49.1",
+    "@types/nodemailer": "^6.4.17",
+    "class-variance-authority": "^0.7.1",
+    "lucide-react": "^0.477.0",
+    "nodemailer": "^6.10.0"
+  }
+}
