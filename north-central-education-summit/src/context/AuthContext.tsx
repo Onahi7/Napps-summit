@@ -7,12 +7,13 @@ import {
   createClientComponentClient,
 } from '@supabase/auth-helpers-nextjs';
 import { Database } from '@/types/supabase';
+import { UserRole } from '@/types/database.types';
 
 interface AuthContextType {
   user: User | null;
   loading: boolean;
   signIn: (email: string, password: string) => Promise<void>;
-  signUp: (email: string, password: string, role: string) => Promise<void>;
+  signUp: (email: string, password: string, role: UserRole) => Promise<void>;
   signOut: () => Promise<void>;
   resetPassword: (email: string) => Promise<void>;
   updatePassword: (password: string) => Promise<void>;
@@ -58,7 +59,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
-  const signUp = async (email: string, password: string, role: string) => {
+  const signUp = async (email: string, password: string, role: UserRole) => {
     const { error: signUpError } = await supabase.auth.signUp({
       email,
       password,
@@ -77,9 +78,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     // Create profile
     const { error: profileError } = await supabase.from('profiles').insert([
       {
-        user_id: user?.id,
+        id: user?.id,
         email,
         role,
+        full_name: email.split('@')[0], // Set a default name that can be updated later
       },
     ]);
 
@@ -121,7 +123,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const { error } = await supabase
       .from('profiles')
       .update(profile)
-      .eq('user_id', user.id);
+      .eq('id', user.id);
 
     if (error) {
       throw error;

@@ -10,7 +10,6 @@ export default function RegisterPage() {
   const { signUp } = useAuth();
   const router = useRouter();
   
-  const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [organization, setOrganization] = useState('');
@@ -23,13 +22,12 @@ export default function RegisterPage() {
     setErrorMessage('');
     
     try {
-      const { error } = await signUp(email, password, fullName);
+      // Always register new users as participants
+      const { error } = await signUp(email, password, 'participant');
       
       if (error) {
         setErrorMessage(error.message);
       } else {
-        // Update the profile with additional information
-        // This will be handled by the trigger function in Supabase
         router.push('/auth/confirmation');
       }
     } catch (error: any) {
@@ -55,23 +53,6 @@ export default function RegisterPage() {
         )}
         
         <form className="space-y-6" onSubmit={handleRegister}>
-          <div>
-            <label htmlFor="fullName" className="block text-sm font-medium leading-6 text-gray-900">
-              Full Name
-            </label>
-            <div className="mt-2">
-              <input
-                id="fullName"
-                name="fullName"
-                type="text"
-                required
-                value={fullName}
-                onChange={(e) => setFullName(e.target.value)}
-                className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 px-3"
-              />
-            </div>
-          </div>
-
           <div>
             <label htmlFor="email" className="block text-sm font-medium leading-6 text-gray-900">
               Email address
